@@ -1,6 +1,6 @@
 import os
 
-from chalice import Chalice
+from chalice import Chalice, Response
 from feedgen.feed import FeedGenerator
 import requests
 
@@ -56,4 +56,10 @@ def feed():
             fe.author( name=e['presenter'] )
     #feed  = fg.atom_str(pretty=True).decode('utf-8')
     feed  = fg.rss_str(pretty=True).decode('utf-8')
-    return feed
+    response_headers = {
+        'content-type': 'application/rss+xml; charset=UTF-8',
+        'cache-control': 'max-age=3600',
+    }
+    return Response(body=feed,
+                    status_code=200,
+                    headers=response_headers)
