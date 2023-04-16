@@ -12,18 +12,16 @@ app = Chalice(app_name='loft-events-feed')
 
 @app.route('/')
 def index():
-    stage = app.current_request.context['stage']
-    return { 'tokyo': f'/{stage}/loft/tokyo/events' }
+    return { 'tokyo': f'/apj/loft/tokyo/events' }
 
 
-@app.route('/loft/tokyo/events')
+@app.route('/apj/loft/tokyo/events')
 def feed():
-    host = app.current_request.headers['host']
-    stage = app.current_request.context['stage']
+    host = 'd1xb4tggvj6fw3.cloudfront.net'
     # Generate feed
     fg = FeedGenerator()
-    fg.id(f'https://{host}/{stage}/loft/tokyo/events')
-    fg.title('Events feed for AWS Startup Loft')
+    fg.id(f'https://{host}/apj/loft/tokyo/events')
+    fg.title('The feed for events at AWS Startup Loft')
     fg.description('Events')
     fg.link( href='https://aws-startup-lofts.com/apj/loft/tokyo/events' )
     fg.language('ja')
@@ -58,7 +56,7 @@ def feed():
     feed  = fg.rss_str(pretty=True).decode('utf-8')
     response_headers = {
         'content-type': 'application/rss+xml; charset=UTF-8',
-        'cache-control': 'max-age=3600',
+        'cache-control': 'max-age=600',
     }
     return Response(body=feed,
                     status_code=200,
